@@ -1,55 +1,61 @@
-# Cat Hipsterizer
-Inspired by ["Hipsterize Your Dog With Deep Learning"](http://blog.dlib.net/2016/10/hipsterize-your-dog-with-deep-learning.html)  
+### Introduction
 
-![result.jpg](https://github.com/kairess/cat_hipsterizer/raw/master/result/result.jpg)  
-![result2.jpg](https://github.com/kairess/cat_hipsterizer/raw/master/result/result2.jpg)  
+This repo is a fork of https://github.com/kairess/cat_hipsterizer. It contains a cat face
+landmark predictor, which I was looking for to use in a project.
 
-Project contains:  
-1. Cat face detection with pretrained Mobilenetv2  
-2. Cat facial landmarks detection with pretrained Mobilenetv2  
-  
-At first, I used [cat frontal face detector of OpenCV](https://www.pyimagesearch.com/2016/06/20/detecting-cats-in-images-with-opencv/), but it looks so bad performance for most of real cat photos. So I decided up to make new model with deep learning.  
-Regression method is used for both face detection and landmark detection, so that model is very **naive** to use on real application. But it works extremely well than I expected ;)  
-  
-Used [Cat dataset on Kaggle](https://www.kaggle.com/crawford/cat-dataset) for training and validation.  
-  
-  
-### Cascade Model Structure
-1. Input (Full image 224x224) - **Face detection model** - Output (face bounding box)
-2. Input (Face image 224x224) - **Facial landmarks model** - Output (9 landmarks points)
+I added some routines to assess the performance of the predictor and I made it use
+[an improved version of the data](https://github.com/zylamarek/cat-dataset).
 
+The predictor consists of two models stacked on each other. The first one predicts the ROI (bounding box)
+and the second one detects landmarks inside the ROI. The detected landmarks are then translated into the original image.
+I did a rather limited hyperparameter search and trained both models on the augmented data. All the results below
+are based on these two models.
 
-# Requirement
-- Python
-- Keras
-- Numpy
-- Dlib
-- OpenCV
-- Pandas
+### Results
 
-# Usage
-### Training
+The RMSE of the whole pipeline is **16.41**, which normalized to the size of the image boils down to **0.04972**.
+**It can be interpreted that an average error of each landmark along any axis is around 16 pixels or almost 5% of the image size.**
+
+The first table presents the performance of the whole pipeline. RMSE values are expressed in pixels,
+MSE in pixels squared. Normalized values were obtained by dividing RMSE by length of the longer edge of an image.
+
+Whole pipeline | train | validation | test
+--- | --- | --- | ---
+MSE | 176.24 | 224.97 | 269.25
+RMSE | 13.28 | 15.00 | **16.41**
+RMSE normalized | 0.01928 | 0.04774 | **0.04972**
+RMSE normalized eyes | 0.01244 | 0.03504 | 0.03586
+RMSE normalized mouth | 0.01716 | 0.05249 | 0.05173
+RMSE normalized ears | 0.02504 | 0.05561 | 0.05964
+
+The table below depicts results of the bounding box (ROI) prediction model. MSE and RMSE were computed for
+two points: top-left and bottom-right corner of the bounding box. Intersection over union (IoU) of
+the predicted and ground truth boxes is also presented.
+
+Bounding box | train | validation | test
+--- | --- | --- | ---
+MSE | 67.31 | 153.41 | 157.41
+RMSE | 8.20 | 12.39 | 12.55
+IoU | 0.8192 | 0.8425 | 0.8441
+
+The last table shows the performance of the landmarks-inside-ROI predictor. The scores were computed using
+the ground truth bounding boxes.
+
+Landmarks | train | validation | test
+--- | --- | --- | ---
+MSE | 6.49 | 42.49 | 56.07
+RMSE | 2.55 | 6.52 | 7.49
+
+### Reproduction
+
+To obtain the above results you should first get a copy of [augmented cat-dataset](https://github.com/zylamarek/cat-dataset). Then run:
 
 ```
 python preprocess.py
-python train.py
-python preprocess_lmks.py
-python train_lmks.py
-```
-### Testing
-```
-python test.py bbs_1.h5 lmks_1.h5
+python preprocess_predict_bbox.py
+python preprocess_lmks_pred.py
+python test_predictor.py
+python test_separately.py
 ```
 
-# Limitations
-- Detect one cat per frame
-- Powerful for frontal faces (a bit low performance for side faces)
-- Cannot detect existence, this model thinks cat must be in the picture
-
-# TODOs (for you)
-- Multiple cats detection
-- Data augmentation (flip, translation, rotation, noise...)
-- YOLO like model (class probability map)
-- Use transpose convolution layers for landmarks reconstruction (to preserve spatial information)
-- Mobile implementation
-- Train Dlib shape predictor model
+Adjust the data path in the scripts if necessary.
