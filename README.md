@@ -11,6 +11,15 @@ and the second one detects landmarks inside the ROI. The detected landmarks are 
 I did a rather limited hyperparameter search and trained both models on the augmented data. All the results below
 are based on these two models.
 
+Images below show examples of predicted landmarks (ordered by prediction accuracy, best on the left).
+Ground truth landmarks are presented in green and predicted landmarks in blue. Landmarks are labeled: 0 - right eye,
+1 - left eye, 2 - mouth, 3 - right ear, 4 - left ear.
+
+[<img src="./images/correct_s.jpg" height="200">](./images/correct.png)
+[<img src="./images/close_s.jpg" height="200">](./images/close.png)
+[<img src="./images/rotated_s.jpg" height="200">](./images/rotated.png)
+[<img src="./images/incorrect_s.jpg" height="200">](./images/incorrect.png)
+
 ### Results
 
 The RMSE of the whole pipeline is **16.41**, which normalized to the size of the image boils down to **0.04972**.
