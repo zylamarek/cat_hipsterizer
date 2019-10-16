@@ -15,10 +15,10 @@ Images below show examples of predicted landmarks (ordered by prediction accurac
 Ground truth landmarks are presented in green and predicted landmarks in blue. Landmarks are labeled: 0 - right eye,
 1 - left eye, 2 - mouth, 3 - right ear, 4 - left ear.
 
-[<img src="./images/correct_s.jpg" height="200">](./images/correct.png)
-[<img src="./images/close_s.jpg" height="200">](./images/close.png)
-[<img src="./images/rotated_s.jpg" height="200">](./images/rotated.png)
-[<img src="./images/incorrect_s.jpg" height="200">](./images/incorrect.png)
+[<img src="./images/correct_s.jpg" height="190">](./images/correct.png)
+[<img src="./images/close_s.jpg" height="190">](./images/close.png)
+[<img src="./images/rotated_s.jpg" height="190">](./images/rotated.png)
+[<img src="./images/incorrect_s.jpg" height="190">](./images/incorrect.png)
 
 ### Results
 
