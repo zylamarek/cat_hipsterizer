@@ -14,7 +14,7 @@ dataset = {
     'imgs': [],
     'lmks': [],
     'landmarks_original': [],
-    'img_max_size': [],
+    'face_size': [],
     'bbs': [],
     'transform': []
 }
@@ -47,6 +47,7 @@ for f, predicted_bb, bbs_transform in zip(file_list, predicted_bbs, bbs_transfor
     landmarks = (pd_frame.as_matrix()[0][1:((pd_frame.shape[1] - 1) // 2) * 2 + 1]).reshape((-1, 2))
     landmarks_original = landmarks.copy()
     bb_original = np.array([np.min(landmarks, axis=0), np.max(landmarks, axis=0)])
+    face_size_truth = np.max(np.diff(bb_original, axis=0))
 
     # transform bb to original coordinates
     bb = predicted_bb.reshape((-1, 2))
@@ -65,7 +66,6 @@ for f, predicted_bb, bbs_transform in zip(file_list, predicted_bbs, bbs_transfor
     # load image
     img_filename, ext = os.path.splitext(f)
     img = cv2.imread(os.path.join(base_path, img_filename))
-    img_max_size = np.max(img.shape[:2])
     new_img = img[new_bb[0][1]:new_bb[1][1], new_bb[0][0]:new_bb[1][0]]
 
     mses.append(np.mean(np.square(bb - bb_original)))
@@ -77,7 +77,7 @@ for f, predicted_bb, bbs_transform in zip(file_list, predicted_bbs, bbs_transfor
     dataset['imgs'].append(img)
     dataset['lmks'].append(new_landmarks.flatten())
     dataset['landmarks_original'].append(landmarks_original.flatten())
-    dataset['img_max_size'].append(img_max_size)
+    dataset['face_size'].append(face_size_truth)
     dataset['transform'].append((ratio, left, top, new_bb[0]))
 
     # for l in new_landmarks:
