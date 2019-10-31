@@ -21,6 +21,8 @@ Ground truth landmarks are presented in green and predicted landmarks in blue. L
 [<img src="./images/rotated_s.jpg" height="190">](./images/rotated.png)
 [<img src="./images/incorrect_s.jpg" height="190">](./images/incorrect.png)
 
+An attempt to improve performance of the predictor resulted in this [project](https://github.com/zylamarek/frederic).
+
 ### Results
 
 **An average error of each landmark along any axis is 6.85 pixels or 4.8% of a cat face size.**
@@ -70,7 +72,7 @@ MAE | 1.77 | 3.58 | **3.58**
 MSE | 6.49 | 34.99 | 39.88
 RMSE | 2.55 | 5.92 | 6.32
 
-### Reproduction
+### Reproducing results
 
 To obtain the above results you should first get a copy of [augmented cat-dataset](https://github.com/zylamarek/cat-dataset). Then run:
 
